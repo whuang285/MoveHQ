@@ -1,32 +1,29 @@
-# Move HQ
+# Move HQ V2
 
-GitHub Pages-ready moving + new apartment planning app.
+A lightweight move + new-apartment command center designed for GitHub Pages. No build step and no dependencies.
 
-## Features
-- Dashboard and move countdown
-- Tasks
-- Room-by-room inventory
-- Bring / Pack / Sell / Donate / Trash / Replace decisions
-- Packing progress and boxes
-- Rooms, budgets and furnishing progress
-- Wishlist with product URLs, prices and photos
-- Moodboard
-- JSON export/import
-- Responsive desktop/mobile UI
-- PWA manifest for Add to Home Screen
-- No Node/npm/build step
+## What's new in V2
+- Real dashboard with actionable counts and packing progress
+- Editable tasks with status, priority, category, due date, notes
+- Room-by-room inventory with Bring / Pack / Sell / Donate / Trash / Replace decisions
+- Inventory status updates directly from the table
+- Rooms with budgets and room-level planning
+- Wishlist with product URL, price, room, priority, status, notes and photo URL
+- Moodboard references
+- Search + filters across tasks and inventory
+- JSON export/import backups
+- Mobile responsive layout + PWA manifest
+- Data persists in browser localStorage
+- No accidental test files or build tooling
 
 ## Deploy
-1. Create a GitHub repo, e.g. `move-hq`.
-2. Upload the contents of this folder to the repo root.
-3. GitHub → Settings → Pages → Deploy from branch → `main` → `/ (root)`.
-4. Open the generated GitHub Pages URL on desktop and phone.
+1. Create a GitHub repository.
+2. Upload all files in this folder to the repository root.
+3. GitHub: Settings → Pages → Deploy from branch → `main` → `/ (root)`.
+4. Open the generated GitHub Pages URL on desktop or phone.
 
-## Run locally
-`python3 -m http.server 8000`
-Then open `http://localhost:8000`.
+## Important limitation
+V2 is still browser-local. Your desktop and phone will have separate data unless you manually export/import the JSON backup.
 
-## Data / sync
-V1 stores data in browser `localStorage`. GitHub Pages hosts the app but does not sync your data between devices. Use Export/Import when moving data between devices.
-
-For true cross-device sync, the next version should use a hosted database/auth service (for example Supabase) and cloud image storage.
+## V3 direction
+For true cross-device sync, add Supabase (auth + Postgres + Storage) or another hosted backend. The UI/data model is intentionally simple enough to migrate to a cloud backend.
