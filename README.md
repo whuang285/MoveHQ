@@ -1,29 +1,47 @@
-# Move HQ V2
+# Move HQ V3
 
-A lightweight move + new-apartment command center designed for GitHub Pages. No build step and no dependencies.
+A cloud-synced move + new-apartment planner. V3 uses **Supabase Auth, Postgres, Row Level Security, and private cloud storage**. Your desktop and phone use the same account and see the same data.
 
-## What's new in V2
-- Real dashboard with actionable counts and packing progress
-- Editable tasks with status, priority, category, due date, notes
-- Room-by-room inventory with Bring / Pack / Sell / Donate / Trash / Replace decisions
-- Inventory status updates directly from the table
-- Rooms with budgets and room-level planning
-- Wishlist with product URL, price, room, priority, status, notes and photo URL
-- Moodboard references
-- Search + filters across tasks and inventory
-- JSON export/import backups
-- Mobile responsive layout + PWA manifest
-- Data persists in browser localStorage
-- No accidental test files or build tooling
+## 1. Create Supabase
+1. Create a project at https://supabase.com/.
+2. Open **SQL Editor** and run all of `schema.sql`.
+3. In **Project Settings → API**, copy the Project URL and the **anon/public** key.
+4. Edit `config.js`:
+```js
+window.MOVE_HQ_CONFIG = {
+  supabaseUrl: 'https://YOUR-PROJECT.supabase.co',
+  supabaseAnonKey: 'YOUR-ANON-KEY'
+};
+```
+Never put the Supabase `service_role` key in this app or GitHub.
 
-## Deploy
-1. Create a GitHub repository.
-2. Upload all files in this folder to the repository root.
-3. GitHub: Settings → Pages → Deploy from branch → `main` → `/ (root)`.
-4. Open the generated GitHub Pages URL on desktop or phone.
+## 2. Run locally
+Because Supabase auth is hosted, serve the folder rather than opening `index.html` directly. For example:
+```bash
+python3 -m http.server 8080
+```
+Then open http://localhost:8080.
 
-## Important limitation
-V2 is still browser-local. Your desktop and phone will have separate data unless you manually export/import the JSON backup.
+## 3. GitHub Pages
+Upload the project files to a GitHub repo. Enable **Settings → Pages → Deploy from branch → main → /(root)**.
 
-## V3 direction
-For true cross-device sync, add Supabase (auth + Postgres + Storage) or another hosted backend. The UI/data model is intentionally simple enough to migrate to a cloud backend.
+Important: `config.js` contains your Supabase public anon key. That key is designed to be used client-side; security comes from Supabase Auth + RLS. Do not put a service-role key here.
+
+## 4. Auth redirect
+In Supabase, go to **Authentication → URL Configuration** and add your deployed GitHub Pages URL to **Site URL / Redirect URLs**, e.g. `https://YOUR-USERNAME.github.io/move-hq/`.
+
+## 5. Cloud photos
+Photos are uploaded into the private `move-hq-media` bucket under your user ID. RLS prevents another signed-in user from reading, changing, or deleting your files. The app creates signed URLs when it displays them.
+
+## What is synced
+- Tasks
+- Rooms + budgets
+- Inventory
+- Packing status
+- Wishlist
+- Moodboard
+- Move date
+- Product links
+- Uploaded photos
+
+Every change writes to Supabase immediately. There is no localStorage data store and no export/import requirement for normal use.
