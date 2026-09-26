@@ -1,47 +1,63 @@
-# Move HQ V3
+# Move HQ V4
 
-A cloud-synced move + new-apartment planner. V3 uses **Supabase Auth, Postgres, Row Level Security, and private cloud storage**. Your desktop and phone use the same account and see the same data.
+Move HQ is a cloud-synced moving + new-apartment organizer built for GitHub Pages + Supabase.
 
-## 1. Create Supabase
-1. Create a project at https://supabase.com/.
-2. Open **SQL Editor** and run all of `schema.sql`.
-3. In **Project Settings → API**, copy the Project URL and the **anon/public** key.
-4. Edit `config.js`:
-```js
-window.MOVE_HQ_CONFIG = {
-  supabaseUrl: 'https://YOUR-PROJECT.supabase.co',
-  supabaseAnonKey: 'YOUR-ANON-KEY'
-};
-```
-Never put the Supabase `service_role` key in this app or GitHub.
+## V4 additions
 
-## 2. Run locally
-Because Supabase auth is hosted, serve the folder rather than opening `index.html` directly. For example:
-```bash
-python3 -m http.server 8080
-```
-Then open http://localhost:8080.
+### Packing Helper
+Track the physical containers you are actually using:
+- Box 1
+- Box 2
+- Suitcase 1
+- Carry-on 1
+- Storage bin 3
+- Tote bag 2
 
-## 3. GitHub Pages
-Upload the project files to a GitHub repo. Enable **Settings → Pages → Deploy from branch → main → /(root)**.
+Each container can store:
+- type
+- status (Planned / Packing / Packed / Moved)
+- dimensions
+- dimension unit
+- weight limit
+- location
+- notes
 
-Important: `config.js` contains your Supabase public anon key. That key is designed to be used client-side; security comes from Supabase Auth + RLS. Do not put a service-role key here.
+Then add exact contents to each container. A content entry can be:
+- linked to an existing household inventory item
+- linked to a closet item
+- manual text such as `Shoes A`, `Shoes B`, `Toiletries`, or `Books`
 
-## 4. Auth redirect
-In Supabase, go to **Authentication → URL Configuration** and add your deployed GitHub Pages URL to **Site URL / Redirect URLs**, e.g. `https://YOUR-USERNAME.github.io/move-hq/`.
+Example:
 
-## 5. Cloud photos
-Photos are uploaded into the private `move-hq-media` bucket under your user ID. RLS prevents another signed-in user from reading, changing, or deleting your files. The app creates signed URLs when it displays them.
+`Suitcase 1` — 22 × 14 × 9 in — 50 lb
+- Books × 4
+- Toiletries × 1
+- Chargers × 1
 
-## What is synced
-- Tasks
-- Rooms + budgets
-- Inventory
-- Packing status
-- Wishlist
-- Moodboard
-- Move date
-- Product links
-- Uploaded photos
+`Box 1`
+- Shoes A
+- Shoes B
+- Shoes C
 
-Every change writes to Supabase immediately. There is no localStorage data store and no export/import requirement for normal use.
+### Closet
+A dedicated cloud inventory for clothing, shoes, bags, and accessories with:
+- category
+- quantity
+- season
+- Bring / Sell / Donate / Decide / Trash
+- packing status
+- assigned container
+- notes
+
+Closet items can also be inserted directly into a packing container.
+
+## Setup
+
+1. Create a Supabase project.
+2. Copy `config.example.js` to `config.js` and fill in your Supabase project URL and anon key.
+3. Run the entire `schema.sql` in Supabase SQL Editor.
+4. If you already installed Move HQ V3, run the V4 schema to add the new tables. The policy section is safe to rerun.
+5. Upload the contents of this folder to a GitHub repository.
+6. Enable GitHub Pages from the `main` branch and root folder.
+
+The browser uses Supabase Auth for identity, PostgreSQL for data, and a private Supabase Storage bucket for photos. There is no localStorage data store.
